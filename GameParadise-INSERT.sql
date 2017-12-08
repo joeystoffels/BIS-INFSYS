@@ -3,7 +3,7 @@
 /* DBMS name:      Microsoft SQL Server 2016                    */
 /* Created on:     11/27/2017 09:14:25 AM                       */
 /*==============================================================*/
-use BIKER
+use master
 use GAMEPARADISE
 go
 
