@@ -54,3 +54,61 @@ create table TYPEPERSPEL  (
 	constraint PK_SPELTYPEPERSPEL primary key (TYPE, TITEL, UITGEVER, JAAR_UITGAVE)
 )
 go
+
+
+
+
+
+
+
+
+
+
+
+/*==============================================================*/
+/* Alter Table: REPARATIE	                            */
+/*==============================================================*/
+/* Remove FK_REPARATIE_BIJ_HUUROVEREENKOMST                     */
+/*                                                              */
+/*==============================================================*/
+
+ALTER TABLE REPARATIE 
+	DROP CONSTRAINT FK_REPARATIE_BIJ_HUUROVEREENKOMST
+GO  
+
+/*==============================================================*/
+/* Alter Table: HUUROVEREENKOMST	                            */
+/*==============================================================*/
+/* Table: HUUROVEREENKOMST                                      */
+/*                                                              */
+/*==============================================================*/
+
+CREATE TABLE ARTIKELENVERHUUR (
+   BARCODE              char(8)              not null,
+   STARTDATUM           datetime             not null,
+   EMAILADRES           varchar(100)         not null,
+)
+GO
+
+INSERT INTO ARTIKELENVERHUUR
+	SELECT DISTINCT BARCODE, STARTDATUM, EMAILADRES FROM HUUROVEREENKOMST;
+
+ALTER TABLE HUUROVEREENKOMST  
+	DROP CONSTRAINT PK_HUUROVEREENKOMST
+
+ALTER TABLE HUUROVEREENKOMST  
+	DROP CONSTRAINT FK_HUUROVEREENKOMST_ARTIKEL
+
+-- Drop index so we can remove the barcode column
+DROP INDEX HUUROVEREENKOMST.Huurovereenkomst_barcode_einddatum;
+ALTER TABLE HUUROVEREENKOMST
+	DROP COLUMN BARCODE;
+
+ALTER TABLE HUUROVEREENKOMST 	
+	ADD CONSTRAINT PK_HUUROVEREENKOMST PRIMARY KEY (EMAILADRES, STARTDATUM)
+
+ALTER TABLE ARTIKELENVERHUUR
+	ADD CONSTRAINT FK_HUUROVEREENKOMST FOREIGN KEY (EMAILADRES, STARTDATUM) REFERENCES HUUROVEREENKOMST (EMAILADRES, STARTDATUM);
+ALTER TABLE ARTIKELENVERHUUR
+	ADD CONSTRAINT FK_ARTIKEL FOREIGN KEY (BARCODE) REFERENCES ARTIKEL (BARCODE);
+GO
