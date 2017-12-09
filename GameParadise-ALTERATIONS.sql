@@ -58,7 +58,24 @@ go
 
 
 
+/*==============================================================*/
+/* Table: MERK                                                  */ 
+/*==============================================================*/
+CREATE TABLE MERK   {
+        MERK                            varchar(30)     not null,
+        CONSTRAINT PK_MERK PRIMARY KEY (MERK)
+}
+GO
 
+
+/*==============================================================*/
+/* Table: TYPE                                                  */ 
+/*==============================================================*/
+CREATE TABLE TYPE   {
+        TYPE                            varchar(30)     not null,
+        CONSTRAINT PK_TYPE PRIMARY KEY (TYPE)
+}
+GO
 
 
 
@@ -112,3 +129,5 @@ ALTER TABLE ARTIKELENVERHUUR
 ALTER TABLE ARTIKELENVERHUUR
 	ADD CONSTRAINT FK_ARTIKEL FOREIGN KEY (BARCODE) REFERENCES ARTIKEL (BARCODE);
 GO
+
+
