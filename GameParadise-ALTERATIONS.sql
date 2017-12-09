@@ -58,36 +58,43 @@ go
 
 
 
+
+
+
+
 /*==============================================================*/
 /* Table: MERK                                                  */ 
 /*==============================================================*/
-CREATE TABLE MERK   {
+CREATE TABLE MERK   (
         MERK                            varchar(30)     not null,
         CONSTRAINT PK_MERK PRIMARY KEY (MERK)
-}
+)
 GO
 
 
 /*==============================================================*/
 /* Table: TYPE                                                  */ 
 /*==============================================================*/
-CREATE TABLE TYPE   {
+CREATE TABLE TYPE   (
         TYPE                            varchar(30)     not null,
         CONSTRAINT PK_TYPE PRIMARY KEY (TYPE)
-}
+)
 GO
 
 
 /*==============================================================*/
 /* Table: CONSOLES                                              */ 
 /*==============================================================*/
-CREATE TABLE CONSOLES   {
+CREATE TABLE CONSOLES   (
         MERK                            varchar(30)     not null,
         TYPE                            varchar(30)     not null,
         HUIDIGE_PRIJS                   decimal(6,2)    not null,
         CONSTRAINT PK_CONSOLES PRIMARY KEY (MERK, TYPE)
-}
+)
 GO
+
+
+
 
 
 
