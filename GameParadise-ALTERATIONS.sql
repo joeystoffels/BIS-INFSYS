@@ -78,6 +78,16 @@ CREATE TABLE TYPE   {
 GO
 
 
+/*==============================================================*/
+/* Table: CONSOLES                                              */ 
+/*==============================================================*/
+CREATE TABLE CONSOLES   {
+        MERK                            varchar(30)     not null,
+        TYPE                            varchar(30)     not null,
+        HUIDIGE_PRIJS                   decimal(6,2)    not null,
+        CONSTRAINT PK_CONSOLES PRIMARY KEY (MERK, TYPE)
+}
+GO
 
 
 
