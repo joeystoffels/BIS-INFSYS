@@ -1,64 +1,113 @@
 USE gameparadise
-go
-
-
+GO
 
 
 /*==============================================================*/
 /* Table: SPELTYPE	                                            */
 /*==============================================================*/
-create table SPELTYPE (
-	TYPE				varchar(30)			not null,
-	constraint PK_SPELTYPE primary key (TYPE)
+CREATE TABLE SPELTYPE (
+	TYPE				VARCHAR(30)			not null,
+	CONSTRAINT PK_SPELTYPE PRIMARY KEY (TYPE)
 )
-go
-
-/*==============================================================*/
-/* Table: LEEFTIJDSCATEGORIE                                    */
-/*==============================================================*/
-create table LEEFTIJDSCATEGORIE (
-	LEEFTIJDSCATEGORIE	varchar(10)			not null,
-	constraint PK_LEEFTIJDSCATEGORIE primary key (LEEFTIJDSCATEGORIE)
-)
-go
-
-/*==============================================================*/
-/* Table: UITGEVER			                                    */
-/*==============================================================*/
-create table UITGEVER (
-	UITGEVER			varchar(150)		not null,
-	constraint PK_UITGEVER primary key (UITGEVER)
-)
-go
-
-/*==============================================================*/
-/* Table: SPELCATEGORIE   	                                    */
-/*==============================================================*/
-create table SPELCATEGORIE (
-	CATEGORIE			char(50)			not null,
-	TITEL				varchar(150)		not null,
-	UITGEVER			varchar(150)		not null,
-	JAAR_UITGAVE		int					not null,
-	constraint PK_SPELCATEGORIE primary key (CATEGORIE, TITEL, UITGEVER, JAAR_UITGAVE)
-)
-go
+GO
 
 /*==============================================================*/
 /* Table: SPELTYPEPERSPEL	                                    */
 /*==============================================================*/
-create table TYPEPERSPEL  (
-	TYPE				varchar(30)			not null,
-	TITEL				varchar(150)		not null,
-	UITGEVER			varchar(150)		not null,
-	JAAR_UITGAVE		int					not null,
-	constraint PK_SPELTYPEPERSPEL primary key (TYPE, TITEL, UITGEVER, JAAR_UITGAVE)
+CREATE TABLE SPELTYPEPERSPEL  (
+	TYPE				VARCHAR(30)			not null,
+	TITEL				VARCHAR(150)		not null,
+	UITGEVER			VARCHAR(150)		not null,
+	JAAR_UITGAVE		INT					not null,
+	CONSTRAINT PK_SPELTYPEPERSPEL PRIMARY KEY (TYPE, TITEL, UITGEVER, JAAR_UITGAVE)
 )
-go
+GO
 
+/*==============================================================*/
+/* Table: LEEFTIJDSCATEGORIE                                    */
+/*==============================================================*/
+CREATE TABLE LEEFTIJDSCATEGORIE (
+	LEEFTIJDSCATEGORIE	VARCHAR(10)			not null,
+	CONSTRAINT PK_LEEFTIJDSCATEGORIE PRIMARY KEY (LEEFTIJDSCATEGORIE)
+)
+GO
 
+/*==============================================================*/
+/* Table: UITGEVER			                                    */
+/*==============================================================*/
+CREATE TABLE UITGEVER (
+	UITGEVER			VARCHAR(150)		not null,
+	CONSTRAINT PK_UITGEVER PRIMARY KEY (UITGEVER)
+)
+GO
 
+/*==============================================================*/
+/* Table: CATEGORIE			                                    */
+/*==============================================================*/
+CREATE TABLE CATEGORIE (
+	CATEGORIE			CHAR(50)			not null,
+	CONSTRAINT PK_CATEGORIE PRIMARY KEY (CATEGORIE)
+)
+GO
 
+/*==============================================================*/
+/* Table: CATEGORIEPERSPEL   	                                    */
+/*==============================================================*/
+CREATE TABLE CATEGORIEPERSPEL (
+	CATEGORIE			CHAR(50)			not null,
+	TITEL				VARCHAR(150)		not null,
+	UITGEVER			VARCHAR(150)		not null,
+	JAAR_UITGAVE		INT					not null,
+	CONSTRAINT PK_CATEGORIEPERSPEL PRIMARY KEY (CATEGORIE, TITEL, UITGEVER, JAAR_UITGAVE)
+)
+GO
 
+INSERT INTO SPELTYPE 
+	SELECT DISTINCT SINGLE_MULTIPLAYER FROM SPEL;
+
+INSERT INTO SPELTYPEPERSPEL 
+	SELECT DISTINCT TITEL, UITGEVER, JAAR_UITGAVE FROM SPEL;
+
+INSERT INTO LEEFTIJDSCATEGORIE
+	SELECT DISTINCT LEEFTIJDSCATEGORIE FROM SPEL;
+
+INSERT INTO UITGEVER
+	SELECT DISTINCT UITGEVER FROM SPEL;
+	
+INSERT INTO CATEGORIE
+	SELECT DISTINCT CATEGORIE FROM SPEL;
+
+INSERT INTO CATEGORIEPERSPEL
+	SELECT DISTINCT CATEGORIE, TITEL, UITGEVER, JAAR_UITGAVE FROM SPEL;
+	
+EXEC sp_RENAME 'Spel.SINGLE_MULTIPLAYER', 'TYPE', 'COLUMN';
+
+ALTER TABLE SPEL
+	DROP CONSTRAINT TITEL;
+
+ALTER TABLE SPEL
+	DROP CONSTRAINT CATEGORIE;
+
+ALTER TABLE SPEL
+	ADD CONSTRAINT PK_SPEL PRIMARY KEY (TITEL, UITGEVER, JAAR_UITGAVE);
+
+ALTER TABLE SPEL
+	ADD CONSTRAINT FK_UITGEVER FOREIGN KEY (UITGEVER) REFERENCES UITGEVER (UITGEVER);
+
+ALTER TABLE SPEL
+	ADD CONSTRAINT FK_LEEFTIJDSCATEGORIE FOREIGN KEY (LEEFTIJDSCATEGORIE) REFERENCES LEEFTIJDSCATEGORIE (LEEFTIJDSCATEGORIE);
+
+ALTER TABLE CATEGORIEPERSPEL
+	ADD CONSTRAINT FK_SPEL FOREIGN KEY (TITEL, UITGEVER, JAAR_UITGAVE) REFERENCES SPEL (TITEL, UITGEVER, JAAR_UITGAVE);
+
+ALTER TABLE CATEGORIEPERSPEL
+	ADD CONSTRAINT FK_CATEGORIE FOREIGN KEY (CATEGORIE) REFERENCES CATEGORIE (CATEGORIE);
+
+ALTER TABLE SPELTYPEPERSPEL
+	ADD CONSTRAINT FK_SPEL FOREIGN KEY (TITEL, UITGEVER, JAAR_UITGAVE) REFERENCES SPEL (TITEL, UITGEVER, JAAR_UITGAVE);
+
+ALTER TABLE SPELTYPEPERSPEL
+	ADD CONSTRAINT FK_SPELTYPE FOREIGN KEY (TYPE) REFERENCES SPELTYPE (TYPE);
 
 
 
