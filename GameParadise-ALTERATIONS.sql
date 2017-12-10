@@ -16,7 +16,7 @@ GO
 /*==============================================================*/
 CREATE TABLE SPELTYPEPERSPEL  (
 	TYPE				VARCHAR(30)			not null,
-	TITEL				VARCHAR(150)		not null,
+	TITEL				VARCHAR(150)		not null, /*  TITEL, UITGEVER, JAAR_UITGAVE  */
 	UITGEVER			VARCHAR(150)		not null,
 	JAAR_UITGAVE		INT					not null,
 	CONSTRAINT PK_SPELTYPEPERSPEL PRIMARY KEY (TYPE, TITEL, UITGEVER, JAAR_UITGAVE)
@@ -44,12 +44,12 @@ GO
 /*==============================================================*/
 /* Table: CATEGORIE			                                    */
 /*==============================================================*/
-CREATE TABLE CATEGORIE (
+/*CREATE TABLE CATEGORIE (
 	CATEGORIE			CHAR(50)			not null,
 	CONSTRAINT PK_CATEGORIE PRIMARY KEY (CATEGORIE)
 )
 GO
-
+*/
 /*==============================================================*/
 /* Table: CATEGORIEPERSPEL   	                                    */
 /*==============================================================*/
@@ -111,42 +111,86 @@ ALTER TABLE SPELTYPEPERSPEL
 
 
 
+
+
+
+
 /*==============================================================*/
-/* Table: MERK                                                  */ 
+/* Table: CONSOLE_TYPE                                          */ 
 /*==============================================================*/
-CREATE TABLE MERK   (
-        MERK                            varchar(30)     not null,
-        CONSTRAINT PK_MERK PRIMARY KEY (MERK)
+CREATE TABLE CONSOLE_TYPE   (
+        TYPE_NAAM                        varchar(30)     not null,
+        CONSTRAINT PK_TYPE PRIMARY KEY (TYPE_NAAM)
 )
 GO
 
-
 /*==============================================================*/
-/* Table: TYPE                                                  */ 
+/* Table: CONSOLE_MERK                                          */ 
 /*==============================================================*/
-CREATE TABLE TYPE   (
-        TYPE                            varchar(30)     not null,
-        CONSTRAINT PK_TYPE PRIMARY KEY (TYPE)
+CREATE TABLE CONSOLE_MERK   (
+        MERK_NAAM							varchar(30)  not null,
+        CONSTRAINT PK_MERK PRIMARY KEY (MERK_NAAM)
 )
 GO
-
 
 /*==============================================================*/
 /* Table: CONSOLES                                              */ 
 /*==============================================================*/
 CREATE TABLE CONSOLES   (
-        MERK                            varchar(30)     not null,
-        TYPE                            varchar(30)     not null,
-        HUIDIGE_PRIJS                   decimal(6,2)    not null,
-        CONSTRAINT PK_CONSOLES PRIMARY KEY (MERK, TYPE)
+        MERK_NAAM                       varchar(30)     not null,
+        TYPE_NAAM                       varchar(30)     not null,
+		KLEUR							char(20)			null, /* varchar ipv char voor bijv tweekleurige consoles? */
+		JAAR_UITGAVE					int					null,
+		MAAT							char(4)				null,
+		OPMERKINGEN						varchar(200)		null,
+        HUIDIGE_PRIJS                   decimal(6,2)		null, /* nu null bij gebrek aan gegevens */
+        CONSTRAINT PK_CONSOLES PRIMARY KEY (MERK_NAAM, TYPE_NAAM)
 )
 GO
 
+/*===============================================================*/
+/*  INSERTING DATA INTO CONSOLES, CONSOLE_MERK & CONSOLE_TYPE	 */
+/*===============================================================*/
+INSERT INTO CONSOLES (MERK_NAAM, TYPE_NAAM, KLEUR, JAAR_UITGAVE, MAAT, OPMERKINGEN)
+	(SELECT MERK, TYPE, KLEUR, JAAR_UITGAVE, MAAT, OPMERKINGEN FROM CONSOLE);
+
+INSERT INTO CONSOLE_MERK
+	SELECT DISTINCT MERK FROM CONSOLE;
+
+INSERT INTO CONSOLE_TYPE
+	SELECT DISTINCT TYPE FROM CONSOLE;
+
+/*===============================================================*/
+/*  Foreign Keys for CONSOLES                                     */
+/*===============================================================*/
+ALTER TABLE CONSOLES
+    ADD CONSTRAINT FK_MERK_CONSOLES FOREIGN KEY (MERK_NAAM) REFERENCES CONSOLE_MERK (MERK_NAAM);
+ALTER TABLE CONSOLES
+    ADD CONSTRAINT FK_TYPE_CONSOLES FOREIGN KEY (TYPE_NAAM) REFERENCES CONSOLE_TYPE (TYPE_NAAM);
+GO
 
 
+/*===============================================================*/
+/*  Clean-up for CONSOLES										 */
+/*===============================================================*/
+ALTER TABLE ARTIKEL
+	DROP CONSTRAINT FK_ARTIKEL_IS_CONSOLE;
 
+ALTER TABLE KLANT
+	DROP CONSTRAINT FK_KLANT_CONSOLE;
 
+ALTER TABLE KLANT 
+	ALTER COLUMN MERK_EIGEN_CONSOLE varchar(30);
 
+ALTER TABLE KLANT
+	ALTER COLUMN TYPE_EIGEN_CONSOLE varchar(30);
+
+DROP TABLE CONSOLE;
+
+EXEC sp_rename 'CONSOLES', 'CONSOLE';
+
+ALTER TABLE KLANT 
+	ADD CONSTRAINT FK_KLANT_CONSOLE FOREIGN KEY (MERK_EIGEN_CONSOLE, TYPE_EIGEN_CONSOLE) REFERENCES CONSOLE (MERK_NAAM, TYPE_NAAM);
 
 /*==============================================================*/
 /* Alter Table: REPARATIE	                            */
