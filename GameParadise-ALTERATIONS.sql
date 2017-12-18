@@ -210,6 +210,8 @@ EXEC sp_rename 'CONSOLES', 'CONSOLE';
 ALTER TABLE KLANT 
 	ADD CONSTRAINT FK_KLANT_CONSOLE FOREIGN KEY (MERK_EIGEN_CONSOLE, TYPE_EIGEN_CONSOLE) REFERENCES CONSOLE (MERK_NAAM, TYPE_NAAM);
 
+EXEC sp_rename 'KLANT.ADRES', 'STRAATNAAM';
+
 ALTER TABLE ARTIKEL
 	ADD CONSTRAINT FK_ARTIKEL_IS_CONSOLE FOREIGN KEY (MERK, TYPE) REFERENCES CONSOLE (MERK_NAAM, TYPE_NAAM);
 
@@ -315,7 +317,7 @@ GO
 /*==============================================================*/
 /* Alter Table: INKOOPOVEREENKOMST	                            */
 /*==============================================================*/
-/* Table: INKOOPOVEREENKOMST                                      */
+/* Table: INKOOPOVEREENKOMST                                    */
 /*                                                              */
 /*==============================================================*/
 
@@ -357,28 +359,12 @@ ALTER TABLE ARTIKELENINKOOP
 	ADD CONSTRAINT FK_ARTIKELENINKOOP_ARTIKEL FOREIGN KEY (BARCODE) REFERENCES ARTIKEL (BARCODE);
 GO
 
+/*==============================================================*/
+/* Alter Table: REPARATIE			                            */
+/*==============================================================*/
+/* Table: REPARATIE                                             */
+/*                                                              */
+/*==============================================================*/
 
-
--- DECLARE @TITEL VARCHAR
--- DECLARE @JAAR_UITGAVE INT
--- DECLARE @UITGEVER VARCHAR
--- DECLARE Spel_Cursor CURSOR FOR  
-
--- SELECT TITEL, JAAR_UITGAVE, UITGEVER FROM dbo.SPEL;
-
--- OPEN Spel_Cursor;  
-
--- FETCH NEXT FROM Spel_Cursor
--- INTO @TITEL, @JAAR_UITGAVE, @UITGEVER; 
-
--- WHILE @@FETCH_STATUS = 0  
---    BEGIN  
-       
-      
--- 	  PRINT 'SPEL: ' + @TITEL + ' ' +  STR(@JAAR_UITGAVE) + ' ' +  @UITGEVER    
--- 	  FETCH NEXT FROM Spel_Cursor
--- 	--   INTO @TITEL, @JAAR_UITGAVE, @UITGEVER;
---    END;  
--- CLOSE Spel_Cursor;  
--- DEALLOCATE Spel_Cursor;  
--- GO  
+ALTER TABLE REPARATIE
+	ADD CONSTRAINT FK_REPARATIE_ARTIKEL FOREIGN KEY (BARCODE) REFERENCES ARTIKEL (BARCODE);
