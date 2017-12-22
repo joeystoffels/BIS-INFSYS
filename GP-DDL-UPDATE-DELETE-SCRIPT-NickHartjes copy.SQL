@@ -19,11 +19,10 @@ ALTER TABLE ARTIKEL ADD CONSTRAINT FK_ARTIKEL_IS_SPEL foreign key (TITEL) REFERE
 -- Deze is verwijderd in het alteration script, en komt later weer terug
 -- ALTER TABLE Klant ADD CONSTRAINT FK_KLANT_CONSOLE foreign key (MERK_EIGEN_CONSOLE, TYPE_EIGEN_CONSOLE) references CONSOLE (MERK, TYPE);
 
-
 -- ALTER TABLE Huurovereenkomst ADD CONSTRAINT FK_HUUROVEREENKOMST_ARTIKEL foreign key (BARCODE) references ARTIKEL (BARCODE);
 
--- Een e-mailadres moet worden aangepast in de klant tabel, en niet vanuit deze tabel.
-ALTER TABLE Huurovereenkomst ADD CONSTRAINT FK_HUUROVEREENKOMST_KLANT foreign key (EMAILADRES) references KLANT (EMAILADRES) ON UPDATE NO ACTION ON DELETE NO ACTION;
+-- Een huurovereenkomst moet altijd aan een bestaande klant gelinked zijn, dus een cascading update en delete.
+ALTER TABLE Huurovereenkomst ADD CONSTRAINT FK_HUUROVEREENKOMST_KLANT foreign key (EMAILADRES) references KLANT (EMAILADRES) ON UPDATE CASCADE ON DELETE CASCADE;
 
 -- Een telefoonnummer moet worden aangepast in de telefoonnummer tabel, niet vanuit deze koppeltabel.
 ALTER TABLE Klanttelefoonnr ADD CONSTRAINT FK_KLANTTELEFOONNUMMER_HEEFT_NUMMER foreign key (TELNUMMER) references TELEFOONNUMMER (TELNUMMER) ON UPDATE NO ACTION ON DELETE NO ACTION;
@@ -31,19 +30,19 @@ ALTER TABLE Klanttelefoonnr ADD CONSTRAINT FK_KLANTTELEFOONNUMMER_HEEFT_NUMMER f
 -- Een e-mailadres moet worden aangepast in de klant tabel, niet vanuit deze koppeltabel.
 ALTER TABLE Klanttelefoonnr ADD CONSTRAINT FK_KLANTTELEFOONNUMMER_HOORT_BIJ_KLANT foreign key (EMAILADRES) references KLANT (EMAILADRES) ON UPDATE NO ACTION ON DELETE NO ACTION;
 
--- Een e-mailadres moet worden aangepast in de klant tabel, niet vanuit deze tabel.
-ALTER TABLE Koopovereenkomst ADD CONSTRAINT FK_KOOP_AAN_KLANT foreign key (EMAILADRES) references KLANT (EMAILADRES) ON UPDATE NO ACTION ON DELETE NO ACTION;
+-- Een koopovereenkomst moet altijd aan een bestaande klant gelinked zijn, dus een cascading update en delete.
+ALTER TABLE Koopovereenkomst ADD CONSTRAINT FK_KOOP_AAN_KLANT foreign key (EMAILADRES) references KLANT (EMAILADRES) ON UPDATE CASCADE ON DELETE CASCADE;
 
 -- ALTER TABLE Koopovereenkomst ADD CONSTRAINT FK_KOOP_ARTIKEL foreign key (BARCODE) references ARTIKEL (BARCODE);
 
--- Een e-mailadres moet worden aangepast in de klant tabel, niet vanuit deze tabel.
-ALTER TABLE Inkoopovereenkomst ADD CONSTRAINT FK_INKOOP_VAN_KLANT foreign key (EMAILADRES) references KLANT (EMAILADRES) ON UPDATE NO ACTION ON DELETE NO ACTION;
+-- Een inkoopovereenkomst moet altijd aan een bestaande klant gelinked zijn, dus een cascading update en delete.
+ALTER TABLE Inkoopovereenkomst ADD CONSTRAINT FK_INKOOP_VAN_KLANT foreign key (EMAILADRES) references KLANT (EMAILADRES) ON UPDATE CASCADE ON DELETE CASCADE;
 
 -- ALTER TABLE Inkoopovereenkomst ADD CONSTRAINT FK_INKOOP_VAN_ARTIKEL foreign key (BARCODE) references ARTIKEL (BARCODE);
 
 
--- Dit is een foreign key van een koppeltabel, wijzigingen vanuit de koppeltablel richting de hoofdtabel worden niet doorgevoerd of verwijderd.
-ALTER TABLE Medewerkerrol ADD CONSTRAINT FK_MEDEWERKER_IS_ROL foreign key (ROL) references ROL (ROL) ON UPDATE NO ACTION ON DELETE NO ACTION;
+-- Vanuit de medewerkerrol tabel moet het mogelijk zijn om de rol aan te passen, als er een nieuwe rol neergezet wordt moet deze in de tabel rol aangemaakt worden. Bij verwijderen moet er niks gebeuren.
+ALTER TABLE Medewerkerrol ADD CONSTRAINT FK_MEDEWERKER_IS_ROL foreign key (ROL) references ROL (ROL) ON UPDATE CASCADE ON DELETE NO ACTION;
 
 -- Dit is een foreign key van een koppeltabel, wijzigingen vanuit de koppeltablel richting de hoofdtabel worden niet doorgevoerd of verwijderd.
 ALTER TABLE Medewerkerrol ADD CONSTRAINT FK_MEDEWERKER_HEEFT_ROL foreign key (INLOGNAAM) references MEDEWERKER (INLOGNAAM) ON UPDATE NO ACTION ON DELETE NO ACTION;
