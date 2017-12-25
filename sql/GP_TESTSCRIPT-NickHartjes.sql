@@ -48,7 +48,7 @@ GO
 -- Case 3a: Onsuccesvol: Gereeddatum vroeger dan startdatum
 INSERT INTO REPARATIE VALUES (26, '10000004', '2017-12-24', 'stews', '2017-12-23',  100.00 , 'GEREED');
 GO
--- Case 3b: Onsuccesvol: Gereeddatum vroeger dan startdatum
+-- Case 3b: Succesvol: Gereeddatum gelijk dan startdatum
 INSERT INTO REPARATIE VALUES (26, '10000004', '2017-12-24', 'stews', '2017-12-24',  100.00 , 'GEREED');
 GO
 -- Cleanup
