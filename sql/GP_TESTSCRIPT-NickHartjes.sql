@@ -8,6 +8,10 @@
 USE GAMEPARADISE
 GO
 
+/*================================================================*/
+/* Testen voor check constrains  		                          */
+/*================================================================*/
+
 -- Opdracht 4: TESTEN (GROEP)
 -- Test alle constraints die in 2 en 3 gecreëerd zijn. Toon door middel van INSERT-statements voor het toevoegen van voorbeeldpopulatie (goede populatie en tegenvoorbeelden) aan dat de geïmplementeerde constraints uit opdrachten 2 en 3 correct geïmplementeerd zijn.
 -- 1. Het geslacht van een klant moet ‘M’ (man) of ‘V’ (vrouw) zijn.
@@ -23,7 +27,6 @@ GO
 -- Cleanup
 DELETE FROM KLANT WHERE EMAILADRES = 'test1c_wilfried.kanen1984@gmail.com';
 GO
-
 
 
 -- 2. De einddatum van een verhuur moet later zijn dan de begindatum van een verhuur.
@@ -94,3 +97,36 @@ GO
 -- Cleanup
 DELETE FROM TELEFOONNUMMER WHERE  TELNUMMER = '06-12345678';
 GO
+
+/*================================================================*/
+/* Testen voor foreign key constrains  		                      */
+/*================================================================*/
+
+-- Test: 
+-- ALTER TABLE ARTIKEL ADD CONSTRAINT FK_ARTIKEL_IS_SPEL foreign key (TITEL, UITGEVER, JAAR_UITGAVE) REFERENCES SPEL (TITEL, UITGEVER, JAAR_UITGAVE) ON UPDATE CASCADE ON DELETE NO ACTION;
+-- ALTER TABLE CATEGORIEPERSPEL ADD CONSTRAINT FK_SPEL FOREIGN KEY (TITEL, UITGEVER, JAAR_UITGAVE) REFERENCES SPEL (TITEL, UITGEVER, JAAR_UITGAVE) ON UPDATE CASCADE ON DELETE NO ACTION;
+-- ALTER TABLE SPELTYPEPERSPEL ADD CONSTRAINT FK_SPELTYPE_PER_SPEL FOREIGN KEY (TITEL, UITGEVER, JAAR_UITGAVE) REFERENCES SPEL (TITEL, UITGEVER, JAAR_UITGAVE) ON UPDATE CASCADE ON DELETE NO ACTION;
+-- Begin Transaction
+BEGIN TRAN
+GO
+SELECT * FROM SPEL WHERE TITEL = 'Battlefield III - Iran';
+SELECT * FROM CATEGORIEPERSPEL WHERE TITEL = 'Battlefield III - Iran';
+SELECT * FROM SPELTYPEPERSPEL WHERE TITEL = 'Battlefield III - Iran';
+SELECT * FROM ARTIKEL WHERE BARCODE = '10000062';
+GO
+-- Update
+UPDATE SPEL SET TITEL = 'Battlefield III - Iraq' WHERE TITEL = 'Battlefield III - Iran';
+SELECT * FROM SPEL WHERE TITEL = 'Battlefield III - Iraq';
+SELECT * FROM CATEGORIEPERSPEL WHERE TITEL = 'Battlefield III - Iraq';
+SELECT * FROM SPELTYPEPERSPEL WHERE TITEL = 'Battlefield III - Iraq';
+SELECT * FROM ARTIKEL WHERE BARCODE = '10000062';
+GO
+-- Delete
+DELETE FROM  SPEL WHERE TITEL = 'Battlefield III - Iraq';
+GO
+-- Rollback Transaction
+ROLLBACK TRAN
+GO
+
+
+
