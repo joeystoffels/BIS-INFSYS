@@ -1,0 +1,7 @@
+Master view:
+Klanten overzicht
+
+Detail view:
+huurhistorie
+omzet v/d klant /jaar
+klantstatus
