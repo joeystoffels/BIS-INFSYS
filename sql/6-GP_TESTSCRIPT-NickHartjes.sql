@@ -91,12 +91,41 @@ GO
 -- Case 6b: Onsuccesvol: Telefoonnummer is te lang
 INSERT INTO TELEFOONNUMMER VALUES ('06-123456789', 'M')
 GO
--- Case 6c: Onsuccesvol: Telefoonnummer goed
+-- Case 6c: Succesvol: Telefoonnummer goed
 INSERT INTO TELEFOONNUMMER VALUES ('06-12345678', 'M')
 GO
 -- Cleanup
-DELETE FROM TELEFOONNUMMER WHERE  TELNUMMER = '06-12345678';
+DELETE FROM TELEFOONNUMMER WHERE TELNUMMER = '06-12345678';
 GO
+
+-- 7. Het emailadres moet een correcte syntax hebben
+-- Case 7a: Onsuccesvol: Emailadres zonder top level domain
+INSERT INTO KLANT VALUES ('test7_wilfried.kanen1984@gmail', 'Sony', 'PS4', 'Wilfried', 'Kanen', 'K. Bouterlaan', '324', '6092AH', 'Arnhem', '02-01-1984', 'M', '1abcdefghij');
+GO
+-- Case 7b: Onsuccesvol: Emailadres zonder top "@"
+INSERT INTO KLANT VALUES ('test7_wilfried.kanen1984gmail.com', 'Sony', 'PS4', 'Wilfried', 'Kanen', 'K. Bouterlaan', '324', '6092AH', 'Arnhem', '02-01-1984', 'M', '1abcdefghij');
+GO
+-- Case 7c: Succesvol: Emailadres met juiste syntax
+INSERT INTO KLANT VALUES ('test7_wilfried.kanen1984@gmail.com', 'Sony', 'PS4', 'Wilfried', 'Kanen', 'K. Bouterlaan', '324', '6092AH', 'Arnhem', '02-01-1984', 'M', '1abcdefghij');
+GO
+-- Cleanup
+DELETE FROM KLANT WHERE EMAILADRES = 'test7_wilfried.kanen1984@gmail.com';
+GO
+
+-- 8. De postcode bestaat uit 4 cijfers en 2 letters.
+-- Case 8a: Onsuccesvol: 6 cijfers
+INSERT INTO KLANT VALUES ('test8_wilfried.kanen1984@gmail.com', 'Sony', 'PS4', 'Wilfried', 'Kanen', 'K. Bouterlaan', '324', '609222', 'Arnhem', '02-01-1984', 'M', '1abcdefghij');
+GO
+-- Case 8b: Onsuccesvol: 6 letters
+INSERT INTO KLANT VALUES ('test8_wilfried.kanen1984@gmail.com', 'Sony', 'PS4', 'Wilfried', 'Kanen', 'K. Bouterlaan', '324', 'AHAHAH', 'Arnhem', '02-01-1984', 'M', '1abcdefghij');
+GO
+-- Case 8c: Succesvol: 4 cijfers en 2 letters
+INSERT INTO KLANT VALUES ('test8_wilfried.kanen1984@gmail.com', 'Sony', 'PS4', 'Wilfried', 'Kanen', 'K. Bouterlaan', '324', '6092AH', 'Arnhem', '02-01-1984', 'M', '1abcdefghij');
+GO
+-- Cleanup
+DELETE FROM KLANT WHERE EMAILADRES = 'test8_wilfried.kanen1984@gmail.com';
+GO
+
 
 /*================================================================*/
 /* Testen voor foreign key constraints  		                  */
