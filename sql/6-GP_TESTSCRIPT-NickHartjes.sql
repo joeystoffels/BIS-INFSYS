@@ -9,7 +9,7 @@ USE GAMEPARADISE
 GO
 
 /*================================================================*/
-/* Testen voor check constrains  		                          */
+/* Testen voor check constraints  		                          */
 /*================================================================*/
 
 -- Opdracht 4: TESTEN (GROEP)
